@@ -2,10 +2,9 @@
 
 class BinaryCounter
 {
-
 private:
     int m_NumberOfBits;
-    int *m_NumberArray;
+    int *m_BinNumberHolderArray;
     int m_Credit = 0;
     int m_ActualCost = 0;
 
@@ -13,7 +12,7 @@ public:
     BinaryCounter(int numberOfBits)
         : m_NumberOfBits(numberOfBits)
     {
-        m_NumberArray = (int *)calloc(numberOfBits, sizeof(int));
+        m_BinNumberHolderArray = (int *)calloc(numberOfBits, sizeof(int));
     }
 
 public:
@@ -22,9 +21,9 @@ public:
         int i = 0;
         int _amortizedCost = 0;
         int _actualCost = 0;
-        while (i < m_NumberOfBits && m_NumberArray[i] == 1)
+        while (i < m_NumberOfBits && m_BinNumberHolderArray[i] == 1)
         {
-            m_NumberArray[i] = 0;
+            m_BinNumberHolderArray[i] = 0;
             i += 1;
 
             // Cost Calculations
@@ -33,7 +32,7 @@ public:
 
         if (i < m_NumberOfBits)
         {
-            m_NumberArray[i] = 1;
+            m_BinNumberHolderArray[i] = 1;
 
             // Cost Calculations
             _actualCost++;
@@ -48,7 +47,7 @@ public:
     {
         for (int i = 0; i < m_NumberOfBits; i++)
         {
-            std::cout << m_NumberArray[i] << " ";
+            std::cout << m_BinNumberHolderArray[i] << " ";
         }
         std::cout << std::endl;
     }
@@ -58,6 +57,11 @@ public:
         std::cout << "Actual Cost: " << m_ActualCost << std::endl;
         std::cout << "Credits: " << m_Credit << std::endl;
         std::cout << "Aggregrate: " << m_ActualCost * 1.0 / rotations * 1.0 << std::endl;
+    }
+
+    ~BinaryCounter()
+    {
+        free(m_BinNumberHolderArray);
     }
 };
 
