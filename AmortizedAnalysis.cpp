@@ -1,46 +1,51 @@
 #include <iostream>
+#include <vector>
 
-class BinaryCounter
+class PotentialBasedBinaryCounter
 {
 private:
     int m_NumberOfBits;
-    int *m_BinNumberHolderArray;
-    int m_Credit = 0;
+    std::vector<int> m_BinNumberHolderArray;
     int m_ActualCost = 0;
+    int m_Potential = 0;
 
 public:
-    BinaryCounter(int numberOfBits)
-        : m_NumberOfBits(numberOfBits)
+    PotentialBasedBinaryCounter(int numberOfBits)
+        : m_NumberOfBits(numberOfBits), m_BinNumberHolderArray(numberOfBits, 0)
     {
-        m_BinNumberHolderArray = (int *)calloc(numberOfBits, sizeof(int));
     }
 
-public:
     void Increment()
     {
         int i = 0;
-        int _amortizedCost = 0;
         int _actualCost = 0;
+
+        // Calculate potential before incrementing
+        int initialPotential = CalculatePotential();
+
+        // Increment the binary counter
         while (i < m_NumberOfBits && m_BinNumberHolderArray[i] == 1)
         {
             m_BinNumberHolderArray[i] = 0;
             i += 1;
 
-            // Cost Calculations
+            // Cost for flipping a bit
             _actualCost++;
         }
 
         if (i < m_NumberOfBits)
         {
             m_BinNumberHolderArray[i] = 1;
-
-            // Cost Calculations
-            _actualCost++;
-            _amortizedCost += 2;
+            _actualCost++; // Cost for setting a bit to 1
         }
 
         m_ActualCost += _actualCost;
-        m_Credit += _amortizedCost - _actualCost;
+
+        // Calculate potential after incrementing
+        int finalPotential = CalculatePotential();
+
+        // Update potential
+        m_Potential += (finalPotential - initialPotential);
     }
 
     void DisplayNumber()
@@ -55,22 +60,34 @@ public:
     void DisplayCosts(int rotations)
     {
         std::cout << "Actual Cost: " << m_ActualCost << std::endl;
-        std::cout << "Credits: " << m_Credit << std::endl;
-        std::cout << "Aggregrate: " << m_ActualCost * 1.0 / rotations * 1.0 << std::endl;
+        std::cout << "Potential: " << m_Potential << std::endl;
+        std::cout << "Aggregate Cost: " << (m_ActualCost * 1.0 / rotations) << std::endl;
     }
 
-    ~BinaryCounter()
+private:
+    /**
+        Potential function is proportional to the no of 1's in the sequence
+     */
+    int CalculatePotential()
     {
-        free(m_BinNumberHolderArray);
+        int potential = 0;
+        for (int bit : m_BinNumberHolderArray)
+        {
+            if (bit == 1)
+            {
+                potential++;
+            }
+        }
+        return potential;
     }
 };
 
 int main()
 {
-    std::cout << "Enter No of Bits >> ";
+    std::cout << "Enter No of Bits for Potential Based ANalysis >> ";
     int _NoOfBits = 0;
     std::cin >> _NoOfBits;
-    BinaryCounter binaryCounter = BinaryCounter(_NoOfBits);
+    PotentialBasedBinaryCounter binaryCounter = PotentialBasedBinaryCounter(_NoOfBits);
     std::cout << std::endl;
 
     // Work here
