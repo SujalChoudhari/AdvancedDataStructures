@@ -11,40 +11,28 @@ private:
 
 public:
     PotentialBasedBinaryCounter(int numberOfBits)
-        : m_NumberOfBits(numberOfBits), m_BinNumberHolderArray(numberOfBits, 0)
-    {
-    }
+        : m_NumberOfBits(numberOfBits), m_BinNumberHolderArray(numberOfBits, 0) {}
 
     void Increment()
     {
         int i = 0;
         int _actualCost = 0;
-
-        // Calculate potential before incrementing
         int initialPotential = CalculatePotential();
-
-        // Increment the binary counter
         while (i < m_NumberOfBits && m_BinNumberHolderArray[i] == 1)
         {
             m_BinNumberHolderArray[i] = 0;
             i += 1;
 
-            // Cost for flipping a bit
             _actualCost++;
         }
 
         if (i < m_NumberOfBits)
         {
             m_BinNumberHolderArray[i] = 1;
-            _actualCost++; // Cost for setting a bit to 1
+            _actualCost++;
         }
-
         m_ActualCost += _actualCost;
-
-        // Calculate potential after incrementing
         int finalPotential = CalculatePotential();
-
-        // Update potential
         m_Potential += (finalPotential - initialPotential);
     }
 
@@ -90,7 +78,6 @@ int main()
     PotentialBasedBinaryCounter binaryCounter = PotentialBasedBinaryCounter(_NoOfBits);
     std::cout << std::endl;
 
-    // Work here
     for (int i = 0; i < 10; i++)
     {
         binaryCounter.Increment();
