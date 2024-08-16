@@ -98,6 +98,8 @@ public:
         }
 
         currentNode->DecrementWordEnd();
+
+        // delete here 
         return true;
     }
 };
